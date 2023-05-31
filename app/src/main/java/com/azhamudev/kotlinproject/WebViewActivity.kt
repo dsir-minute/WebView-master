@@ -49,9 +49,9 @@ class WebViewActivity : AppCompatActivity(){
 
         super.onCreate(savedInstanceState)
 
-        val actionbar = supportActionBar
+//may23, because alpine/lci/eslab gamechanger        val actionbar = supportActionBar
         //set actionbar title
-        actionbar!!.title = "crafted by eShakerLab, 2022"
+//        actionbar!!.title = "crafted by eShakerLab, 2022"
 
         setContentView(R.layout.activity_web_view)
         val URL = intent.getStringExtra("url")

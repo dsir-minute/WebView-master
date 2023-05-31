@@ -34,12 +34,12 @@ class SplashScreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.raxy_splashscreen)
-        val actionbar = supportActionBar
+//        val actionbar = supportActionBar
         //set actionbar title
-        actionbar!!.title = "eShakerLab's webview 06dec22 00:35"
+//        actionbar!!.title = "eShakerLab's webview 06dec22 00:35"
 
         val button = findViewById<Button>(R.id.goBtn)
-        val editTextUrl = findViewById(R.id.editUrl) as EditText
+        val editTextUrl = findViewById<EditText>(R.id.editUrl)
         val sharedPreferences: SharedPreferences = this.getSharedPreferences("raxysharedprefs", Context.MODE_PRIVATE)
         val prevUrl = sharedPreferences.getString("url","not_found")
         if( ! prevUrl.equals("not_found")){
