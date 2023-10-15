@@ -8,12 +8,10 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.provider.Settings
+import android.support.v4.view.WindowCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import android.view.KeyEvent
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.view.animation.Animation
 import android.view.animation.Transformation
 import android.webkit.WebResourceError
@@ -49,6 +47,18 @@ class WebViewActivity : AppCompatActivity(){
 
         super.onCreate(savedInstanceState)
 
+        // remove title
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        window.decorView.apply {
+            // Hide both the navigation bar and the status bar.
+            // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
+            // a general rule, you should design your app to hide the status bar whenever you
+            // hide the navigation bar.
+            systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN
+        }
 //may23, because alpine/lci/eslab gamechanger        val actionbar = supportActionBar
         //set actionbar title
 //        actionbar!!.title = "crafted by eShakerLab, 2022"
