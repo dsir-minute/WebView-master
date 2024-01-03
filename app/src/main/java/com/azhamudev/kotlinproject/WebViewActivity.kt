@@ -68,14 +68,14 @@ class WebViewActivity : AppCompatActivity(){
 //        val toast = Toast.makeText(applicationContext, URL, Toast.LENGTH_SHORT)
 //        toast.show()
 
-        startLoaderAnimate()
+//        startLoaderAnimate()
 
         webView.settings.javaScriptEnabled = true
         webView.settings.setSupportZoom(false)
 
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
-                endLoaderAnimate()
+//                endLoaderAnimate()
             }
 
             override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {

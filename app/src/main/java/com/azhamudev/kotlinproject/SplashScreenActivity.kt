@@ -4,12 +4,17 @@ import Prefs
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.icu.text.SimpleDateFormat
+import android.os.Build
 import android.os.Bundle
+import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
+import java.sql.Date
 
 class SplashScreenActivity : AppCompatActivity() {
 
@@ -31,13 +36,20 @@ class SplashScreenActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.raxy_splashscreen)
 //        val actionbar = supportActionBar
         //set actionbar title
 //        actionbar!!.title = "eShakerLab's webview 06dec22 00:35"
-
+        val build_ms = BuildConfig.BUILD_DATE_MS
+        val author = BuildConfig.AUTHOR
+        val formator = SimpleDateFormat("yyyy-MM-dd HH:mm")
+        val buildDate = formator.format( Date(build_ms))
+        println("=== apk built on "+buildDate)
+        val tv1 = findViewById<TextView>(R.id.tv1)
+        tv1.setText("built by %s for ESLabTCR on %s".format(author, buildDate))
         val button = findViewById<Button>(R.id.goBtn)
         val editTextUrl = findViewById<EditText>(R.id.editUrl)
         val sharedPreferences: SharedPreferences = this.getSharedPreferences("raxysharedprefs", Context.MODE_PRIVATE)
