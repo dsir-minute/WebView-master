@@ -17,7 +17,7 @@ import android.widget.TextView
 import java.sql.Date
 
 class SplashScreenActivity : AppCompatActivity() {
-
+/*
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.my_menu, menu)
@@ -35,6 +35,7 @@ class SplashScreenActivity : AppCompatActivity() {
             super.onOptionsItemSelected(item)
         }
     }
+ */
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,7 +50,7 @@ class SplashScreenActivity : AppCompatActivity() {
         val buildDate = formator.format( Date(build_ms))
         println("=== apk built on "+buildDate)
         val tv1 = findViewById<TextView>(R.id.tv1)
-        tv1.setText("built by %s for ESLabTCR on %s".format(author, buildDate))
+        tv1.setText("crafted by %s, for ESLabTCR & SWR, on %s".format(author, buildDate))
         val button = findViewById<Button>(R.id.goBtn)
         val editTextUrl = findViewById<EditText>(R.id.editUrl)
         val sharedPreferences: SharedPreferences = this.getSharedPreferences("raxysharedprefs", Context.MODE_PRIVATE)
@@ -57,24 +58,20 @@ class SplashScreenActivity : AppCompatActivity() {
         if( ! prevUrl.equals("not_found")){
             editTextUrl.setText(prevUrl).toString()
         }
-
         button?.setOnClickListener() {
             val intent = Intent(this, WebViewActivity::class.java)
             val theUrl = editTextUrl.text.toString()
             intent.putExtra("url",theUrl)
 //            val toast = Toast.makeText(applicationContext, editTextUrl.text, Toast.LENGTH_SHORT)
 //            toast.show()
-
             val editor:SharedPreferences.Editor =  sharedPreferences.edit()
             editor.putString("url",theUrl)
             editor.apply()
             editor.commit()
             startActivity(intent)
         }
-
 //        Timer().schedule(3000) {
 //        }
     }
-
 
 }
