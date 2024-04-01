@@ -1,6 +1,5 @@
 package com.azhamudev.kotlinproject
 
-import Prefs
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -9,9 +8,10 @@ import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.View
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
 import java.sql.Date
@@ -52,26 +52,55 @@ class SplashScreenActivity : AppCompatActivity() {
         val tv1 = findViewById<TextView>(R.id.tv1)
         tv1.setText("crafted by %s, for ESLabTCR & SWR, on %s".format(author, buildDate))
         val button = findViewById<Button>(R.id.goBtn)
+        val cBox1 = findViewById<CheckBox>(R.id.checkBox1)
         val editTextUrl = findViewById<EditText>(R.id.editUrl)
-        val sharedPreferences: SharedPreferences = this.getSharedPreferences("raxysharedprefs", Context.MODE_PRIVATE)
-        val prevUrl = sharedPreferences.getString("url","not_found")
-        if( ! prevUrl.equals("not_found")){
-            editTextUrl.setText(prevUrl).toString()
+        editTextUrl.onDrawableEndClick {
+            editTextUrl.setText("")
         }
+        val sharedPreferences: SharedPreferences = this.getSharedPreferences("raxysharedprefs", Context.MODE_PRIVATE)
+        val prevUrl = sharedPreferences.getString("url","")
+        editTextUrl.setText(prevUrl).toString()
+        val intent = Intent(this, WebViewActivity::class.java)
+        var theUrl = prevUrl
+        val prevFastStart = sharedPreferences.getBoolean("fastStart",false)
+
         button?.setOnClickListener() {
-            val intent = Intent(this, WebViewActivity::class.java)
-            val theUrl = editTextUrl.text.toString()
-            intent.putExtra("url",theUrl)
+            theUrl = editTextUrl.text.toString()
 //            val toast = Toast.makeText(applicationContext, editTextUrl.text, Toast.LENGTH_SHORT)
 //            toast.show()
             val editor:SharedPreferences.Editor =  sharedPreferences.edit()
             editor.putString("url",theUrl)
+            editor.putBoolean("fastStart",cBox1.isChecked)
             editor.apply()
             editor.commit()
+            intent.putExtra("url",theUrl)
+            if( theUrl!!.isNotEmpty()) {
+                startActivity(intent)
+            }
+        }
+        println("prevUrl:"+prevUrl)
+        println("prevFastStart:"+prevFastStart)
+        if( prevFastStart && theUrl!!.isNotEmpty()) {
+            intent.putExtra("url",theUrl)
             startActivity(intent)
         }
 //        Timer().schedule(3000) {
 //        }
+    }
+
+    fun EditText.onDrawableEndClick(action: () -> Unit) {
+        setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                v as EditText
+                val end = if (v.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL)
+                    v.left else v.right
+                if (event.rawX >= (end - v.compoundPaddingEnd)) {
+                    action.invoke()
+                    return@setOnTouchListener true
+                }
+            }
+            return@setOnTouchListener false
+        }
     }
 
 }
