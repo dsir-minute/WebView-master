@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="22dp"
         android:layout_marginEnd="22dp"
-        android:hint="type new url here"
+        android:hint="enter target url"
         android:typeface="monospace"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 
@@ -41,6 +41,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/goBtn"
-        android:text="GO !" />
+        android:text="Remember and load URL" />
 
 </android.support.constraint.ConstraintLayout>

@@ -1,36 +1,35 @@
 package com.azhamudev.kotlinproject
 
-import App
-import Prefs
 import android.animation.ValueAnimator
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.provider.Settings
-import android.support.v4.view.WindowCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import android.view.*
+import android.view.KeyEvent
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.Transformation
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_web_view.*
-
+import kotlinx.android.synthetic.main.activity_web_view.loaderImage
+import kotlinx.android.synthetic.main.activity_web_view.webView
 
 class WebViewActivity : AppCompatActivity(){
     private var isAlreadyCreated = false
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.my_menu, menu)
         return true
     }
-
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.get_out1 -> {
             // User chose the "exit" item...
@@ -44,14 +43,11 @@ class WebViewActivity : AppCompatActivity(){
         }
     }
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
-
         // remove title
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         window.decorView.apply {
             // Hide both the navigation bar and the status bar.
             // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
@@ -67,23 +63,21 @@ class WebViewActivity : AppCompatActivity(){
         val URL = intent.getStringExtra("url")
 //        val toast = Toast.makeText(applicationContext, URL, Toast.LENGTH_SHORT)
 //        toast.show()
-
-//        startLoaderAnimate()
-
+        startLoaderAnimate()
         webView.settings.javaScriptEnabled = true
         webView.settings.setSupportZoom(false)
-
+        webView.settings.domStorageEnabled = true // needed on android 13+ else screen might stays blank
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
-//                endLoaderAnimate()
+                endLoaderAnimate()
             }
-
             override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
                 super.onReceivedError(view, request, error)
                 endLoaderAnimate()
                 showErrorDialog("Error",
-                        "No internet connection. Please check your connection.",
-                        this@WebViewActivity)
+                    "No internet connection. Please check your connection.",
+                    this@WebViewActivity
+                )
             }
         }
         webView.clearCache(true)
@@ -92,10 +86,9 @@ class WebViewActivity : AppCompatActivity(){
 
     override fun onResume() {
         super.onResume()
-
         if (isAlreadyCreated && !isNetworkAvailable()) {
             isAlreadyCreated = false
-            showErrorDialog("Error", "No internet connection. Please check your connection.",
+            showErrorDialog("Error", "No internet connection. Please check your connectivity !",
                     this@WebViewActivity)
         }
     }
@@ -104,7 +97,6 @@ class WebViewActivity : AppCompatActivity(){
         val connectionManager =
                 this@WebViewActivity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = connectionManager.activeNetworkInfo
-
         return networkInfo != null && networkInfo.isConnectedOrConnecting
     }
 
@@ -145,21 +137,16 @@ class WebViewActivity : AppCompatActivity(){
                 loaderImage.layoutParams.height = newHeight
                 loaderImage.requestLayout()
             }
-
             override fun initialize(width: Int, height: Int, parentWidth: Int, parentHeight: Int) {
                 super.initialize(width, height, parentWidth, parentHeight)
             }
-
             override fun willChangeBounds(): Boolean {
                 return true
             }
         }
-
         objectAnimator.repeatCount = -1
         objectAnimator.repeatMode = ValueAnimator.REVERSE
-        objectAnimator.duration = 1000
+        objectAnimator.duration = 700
         loaderImage.startAnimation(objectAnimator)
     }
-
-
 }
