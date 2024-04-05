@@ -4,6 +4,7 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
+import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.support.v7.app.AlertDialog
@@ -25,6 +26,7 @@ import kotlinx.android.synthetic.main.activity_web_view.webView
 
 class WebViewActivity : AppCompatActivity(){
     private var isAlreadyCreated = false
+    var context = this
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.my_menu, menu)
@@ -66,8 +68,102 @@ class WebViewActivity : AppCompatActivity(){
         startLoaderAnimate()
         webView.settings.javaScriptEnabled = true
         webView.settings.setSupportZoom(false)
+        webView.setInitialScale(100)
         webView.settings.domStorageEnabled = true // needed on android 13+ else screen might stays blank
+        WebView.setWebContentsDebuggingEnabled(true);
+
         webView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String): Boolean {
+                if(url.startsWith("intent:")) {
+                    // url like : intent:#Intent;action=android.intent.action.MAIN;package=com.azhamudev.kotlinproject;end
+                    var arr1 = url.takeIf(String::isNotEmpty)
+                        ?.split(";")
+                        ?.toTypedArray()
+                        ?: emptyArray()
+                    var found = ""
+                    for(element in arr1) {
+                        if( element.startsWith("package=")){
+                            var arr2 = element.takeIf(String::isNotEmpty)
+                                ?.split("=")
+                                ?.toTypedArray()
+                                ?: emptyArray()
+                            println( "package name is "+arr2[1])
+                            found = arr2[1]
+                            break
+                        }
+                    }
+                    if( found.isNotEmpty()) {
+//                        view.stopLoading()
+
+                        val intent = Intent("android.intent.action.MAIN")
+                        intent.setPackage(found)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent)
+
+                        // FLAG_ACTIVITY_BROUGHT_TO_FRONT
+                        // FLAG_ACTIVITY_REORDER_TO_FRONT
+                        // FLAG_ACTIVITY_LAUNCH_ADJACENT
+                        // FLAG_ACTIVITY_NEW_TASK
+                        // FLAG_ACTIVITY_CLEAR_TOP
+                        /*
+                        val openURL = Intent(android.content.Intent.ACTION_VIEW)
+                        openURL.data = Uri.parse("http://192.168.100.191:8080/VelvetWeb/?tablet=1&buttonText=MONBUTTO&buttonUrl=http//www.google.com")
+                        startActivity(openURL)
+
+                         */
+                        return true
+                    }
+                } else {
+//                        view.stopLoading()
+//                        view.loadUrl(url)
+                }
+                return super.shouldOverrideUrlLoading(view, url)
+            }
+/*
+            override fun onLoadResource(view: WebView, url: String) {
+//                    println("in onLoadResource "+url)
+                if(url.startsWith("intent:")) {
+                    // url like : intent:#Intent;action=android.intent.action.MAIN;package=com.azhamudev.kotlinproject;end
+                    var arr1 = url.takeIf(String::isNotEmpty)
+                        ?.split(";")
+                        ?.toTypedArray()
+                        ?: emptyArray()
+                    var found = ""
+                    for(element in arr1) {
+                        if( element.startsWith("package=")){
+                            var arr2 = element.takeIf(String::isNotEmpty)
+                                ?.split("=")
+                                ?.toTypedArray()
+                                ?: emptyArray()
+                            println( "package name is "+arr2[1])
+                            found = arr2[1]
+                            break
+                        }
+                    }
+                    if( found.isNotEmpty()) {
+//                        view.stopLoading()
+                        /*
+                        val intent = Intent("android.intent.action.MAIN")
+                        intent.setPackage(found)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent)
+
+                         */
+                        // FLAG_ACTIVITY_BROUGHT_TO_FRONT
+                        // FLAG_ACTIVITY_REORDER_TO_FRONT
+                        // FLAG_ACTIVITY_LAUNCH_ADJACENT
+                        // FLAG_ACTIVITY_NEW_TASK
+                        // FLAG_ACTIVITY_CLEAR_TOP
+                        val openURL = Intent(android.content.Intent.ACTION_VIEW)
+                        openURL.data = Uri.parse("http://192.168.100.191:8080/VelvetWeb/?tablet=1&buttonText=MONBUTTO&buttonUrl=http//www.google.com")
+                        startActivity(openURL)
+                    }
+                } else {
+//                        view.stopLoading()
+//                        view.loadUrl(url)
+                }
+            }
+*/
             override fun onPageFinished(view: WebView?, url: String?) {
                 endLoaderAnimate()
             }
@@ -75,7 +171,7 @@ class WebViewActivity : AppCompatActivity(){
                 super.onReceivedError(view, request, error)
                 endLoaderAnimate()
                 showErrorDialog("Error",
-                    "No internet connection. Please check your connection.",
+                    "in onReceivedError : "+error,
                     this@WebViewActivity
                 )
             }
@@ -88,7 +184,7 @@ class WebViewActivity : AppCompatActivity(){
         super.onResume()
         if (isAlreadyCreated && !isNetworkAvailable()) {
             isAlreadyCreated = false
-            showErrorDialog("Error", "No internet connection. Please check your connectivity !",
+            showErrorDialog("in onResume Error : ", "isAlreadyCreated && !isNetworkAvailable ",
                     this@WebViewActivity)
         }
     }
