@@ -50,7 +50,7 @@ class SplashScreenActivity : AppCompatActivity() {
         val buildDate = formator.format( Date(build_ms))
         println("=== apk built on "+buildDate)
         val tv1 = findViewById<TextView>(R.id.tv1)
-        tv1.setText("crafted by %s, for ESLabTCR & SWR, on %s".format(author, buildDate))
+        tv1.setText("com.azhamudev.kotlinproject, crafted by %s, for ESLabTCR & SWR, on %s".format(author, buildDate))
         val button = findViewById<Button>(R.id.goBtn)
         val cBox1 = findViewById<CheckBox>(R.id.checkBox1)
         val editTextUrl = findViewById<EditText>(R.id.editUrl)

@@ -4,7 +4,6 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
-import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.support.v7.app.AlertDialog
@@ -17,12 +16,14 @@ import android.view.Window
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.Transformation
+import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import kotlinx.android.synthetic.main.activity_web_view.loaderImage
 import kotlinx.android.synthetic.main.activity_web_view.webView
+
 
 class WebViewActivity : AppCompatActivity(){
     private var isAlreadyCreated = false
@@ -71,7 +72,7 @@ class WebViewActivity : AppCompatActivity(){
         webView.setInitialScale(100)
         webView.settings.domStorageEnabled = true // needed on android 13+ else screen might stays blank
         WebView.setWebContentsDebuggingEnabled(true);
-
+        webView.webChromeClient = WebChromeClient()
         webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, url: String): Boolean {
                 if(url.startsWith("intent:")) {
