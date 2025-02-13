@@ -4,6 +4,7 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
+import android.net.http.SslError
 import android.os.Bundle
 import android.provider.Settings
 import android.support.v7.app.AlertDialog
@@ -16,6 +17,7 @@ import android.view.Window
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.Transformation
+import android.webkit.SslErrorHandler
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
@@ -23,7 +25,6 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import kotlinx.android.synthetic.main.activity_web_view.loaderImage
 import kotlinx.android.synthetic.main.activity_web_view.webView
-
 
 class WebViewActivity : AppCompatActivity(){
     private var isAlreadyCreated = false
@@ -74,6 +75,13 @@ class WebViewActivity : AppCompatActivity(){
         WebView.setWebContentsDebuggingEnabled(true);
         webView.webChromeClient = WebChromeClient()
         webView.webViewClient = object : WebViewClient() {
+            override fun onReceivedSslError(
+                view: WebView?,
+                handler: SslErrorHandler,
+                error: SslError?
+            ) {
+                handler.proceed() // Ignore SSL certificate errors
+            }
             override fun shouldOverrideUrlLoading(view: WebView?, url: String): Boolean {
                 if(url.startsWith("intent:")) {
                     // url like : intent:#Intent;action=android.intent.action.MAIN;package=com.azhamudev.kotlinproject;end
