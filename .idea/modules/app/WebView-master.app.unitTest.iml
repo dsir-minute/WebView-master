@@ -2,7 +2,7 @@
 <module external.linked.project.id=":app:unitTest" external.linked.project.path="$MODULE_DIR$/../../../app" external.root.project.path="$MODULE_DIR$/../../.." external.system.id="GRADLE" external.system.module.type="sourceSet" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet external-system-id="GRADLE" type="kotlin-language" name="Kotlin">
-      <configuration version="4" platform="JVM 1.8" allPlatforms="JVM [1.8]" useProjectSettings="false">
+      <configuration version="4" platform="JVM 1.8" allPlatforms="JVM [1.8]" useProjectSettings="false" pureKotlinSourceFolders="$MODULE_DIR$/../../../app/src/debugAndroidTest/kotlin;/home/raxy/AndroidStudioProjects/WebView-master/app/src/debug/kotlin;/home/raxy/AndroidStudioProjects/WebView-master/app/src/debug/java;/home/raxy/AndroidStudioProjects/WebView-master/app/src/debugUnitTest/kotlin">
         <additionalVisibleModuleNames>:app:main</additionalVisibleModuleNames>
         <compilerSettings />
         <compilerArguments>
